@@ -34,7 +34,7 @@ hic remove http://mywebsite.com
 
 ### Prerequisite
 
-You need to install Go to compile this program. You may skip this section if you have working Go installation in you machine. E.g in Ubuntu :
+You need to install Go to compile this program. You may skip this section if you have working Go installation in your machine. E.g in Ubuntu :
 ```
 apt-get install golang
 ```
