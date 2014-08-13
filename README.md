@@ -50,6 +50,10 @@ vi ~/.bashrc
 ```
 export GOPATH=~/.gocode
 ```
+Reload .bashrc
+```
+. ~/.bashrc
+```
 
 
 ### Compile
