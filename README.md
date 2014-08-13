@@ -1,4 +1,4 @@
-WireTip
+Wiretip
 ===========
 
 Wiretip (hic) is a cli program written in Go to add and remove url in Hipache.
