@@ -4,7 +4,7 @@ Hipache Cli
 Hipache cli (hic) is a program written in Go to add and remove url in Hipache.
 
 
-Basic Usage:
+### Basic Usage:
 List all mappings
 ```
 hic show
