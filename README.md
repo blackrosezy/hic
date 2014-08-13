@@ -1,7 +1,7 @@
-Hipache Cli
+WireTip
 ===========
 
-Hipache cli (hic) is a program written in Go to add and remove url in Hipache.
+Wiretip (hic) is a cli program written in Go to add and remove url in Hipache.
 
 
 ### Basic Usage:
@@ -58,11 +58,11 @@ Reload .bashrc
 
 ### Compile
 
-To compile Hipache Cli, you need to download dependency library first:
+To compile Wiretip, you need to download dependency library first:
 ```bash
 go get github.com/garyburd/redigo/redis
 ```
-Once you finish download you can checkout Hipache Cli source code and compile:
+Once you finish download you can checkout Wiretip source code and compile:
 ```bash
 git clone git@github.com:blackrosezy/hipache-cli.git
 cd hipache-cli
@@ -79,16 +79,16 @@ If you can see a help instruction, then you build is success.
 
 ### Install
 
-Copy the Hipache Cli to /usr/local/bin
+Copy the Wiretip to /usr/local/bin
 ```bash
 cp hic /usr/local/bin
 ```
-Now you can access Hipache Cli from any path.
+Now you can access Wiretip from any path.
 
 
 ### License
 
-Hipache Cli is licensed under the MIT license. (http://opensource.org/licenses/MIT)
+Wiretip is licensed under the MIT license. (http://opensource.org/licenses/MIT)
 
 
 ### Contributing
