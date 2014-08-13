@@ -46,7 +46,7 @@ set GOPATH environment:
 ```bash
 vi ~/.bashrc
 ```
-...and add this export command at the bottom of the file:
+...and add this export command to the bottom of the file:
 ```bash
 export GOPATH=~/.gocode
 ```
@@ -64,8 +64,8 @@ go get github.com/garyburd/redigo/redis
 ```
 Once you finish download you can checkout Wiretip source code and compile:
 ```bash
-git clone git@github.com:blackrosezy/hipache-cli.git
-cd hipache-cli
+git clone git@github.com:blackrosezy/wiretip.git
+cd wiretip
 go build hic.go
 chmod +x hic
 ```
