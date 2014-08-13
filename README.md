@@ -76,6 +76,11 @@ cp hic /usr/local/bin
 Now you can access Hipache Cli from any path.
 
 
-### Contribute
+### License
+
+Hipache Cli is licensed under the MIT license. (http://opensource.org/licenses/MIT)
+
+
+### Contributing
 
 I you have better idea or something to share, your pull request are welcome!
