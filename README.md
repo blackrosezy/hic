@@ -54,7 +54,7 @@ go get github.com/garyburd/redigo/redis
 ```
 Once you finish download you can checkout Hipache Cli source code and compile:
 ```
-git clone github.com/blackrosezy/hipache-cli
+git clone git@github.com:blackrosezy/hipache-cli.git
 cd hipache-cli
 go build hic.go
 chmod +x hic
@@ -64,9 +64,8 @@ You can test by typing:
 ```
 ./hic
 ```
-
-
 If you can see a help instruction, then you build is success.
+
 
 ### Install
 
