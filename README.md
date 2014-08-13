@@ -26,7 +26,6 @@ hic remove http://mywebsite.com
 ```
 
 
-
 ### Prerequisite
 
 You need to install Go to compile this program. You may skip this section if you have working Go installation in you machine. E.g in Ubuntu :
@@ -45,6 +44,7 @@ vi ~/.bashrc
 ```
 export GOPATH=~/.gocode
 ```
+
 
 ### Compile
 
@@ -65,6 +65,7 @@ You can test by typing:
 ./hic
 ```
 
+
 If you can see a help instruction, then you build is success.
 
 ### Install
@@ -72,7 +73,6 @@ If you can see a help instruction, then you build is success.
 Copy the Hipache Cli to /usr/local/bin
 ```
 cp hic /usr/local/bin
-
 ```
 Now you can access Hipache Cli from any path.
 
