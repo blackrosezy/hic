@@ -75,3 +75,7 @@ cp hic /usr/local/bin
 ```
 Now you can access Hipache Cli from any path.
 
+
+### Contribute
+
+I you have better idea or something to share, your pull request are welcome!
