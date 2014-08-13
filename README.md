@@ -54,7 +54,7 @@ export GOPATH=~/.gocode
 
 ### Compile
 
-To compile Hipache Cli, you need to download dependency libraries first:
+To compile Hipache Cli, you need to download dependency library first:
 ```
 go get github.com/garyburd/redigo/redis
 ```
