@@ -34,7 +34,7 @@ hic remove http://mywebsite.com
 
 ### Prerequisite
 
-You need to install Go to compile this program. You may skip this section if you have working Go installation in your machine. E.g in Ubuntu :
+You need to install Go to compile this program. You may skip this section if you have working Go installed in your machine. E.g in Ubuntu :
 ```bash
 apt-get install golang
 ```
@@ -62,7 +62,7 @@ To compile Wiretip, you need to download dependency library first:
 ```bash
 go get github.com/garyburd/redigo/redis
 ```
-Once you finish download you can checkout Wiretip source code and compile:
+Once you finish download, you can checkout Wiretip source code and compile:
 ```bash
 git clone git@github.com:blackrosezy/wiretip.git
 cd wiretip
@@ -74,7 +74,7 @@ You can test by typing:
 ```bash
 ./hic
 ```
-If you can see a help instruction, then you build is success.
+If you can see a help instruction, then your build is success.
 
 
 ### Install
