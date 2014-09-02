@@ -278,7 +278,7 @@ func Clear(c redis.Conn) {
 	}
 }
 
-// c, <url>, <container name>, <private port>
+// c, <url>, <ip>, <private port>
 func Remove(docker *dockerclient.DockerClient, c redis.Conn, url string, ip string, port int) {
 	new_url := url
 	if strings.HasPrefix(url, "http://") {
@@ -305,7 +305,7 @@ func Remove(docker *dockerclient.DockerClient, c redis.Conn, url string, ip stri
 	fmt.Println(" => Removed!")
 }
 
-// c, <url>, <container name>, <private port>
+// c, <container name/ip>, <url>, <private port>
 func Add(docker *dockerclient.DockerClient, c redis.Conn, container_name string, url string, port int) {
 	new_url := url
 	if strings.HasPrefix(url, "http://") {
@@ -366,20 +366,6 @@ func Show(c redis.Conn) {
 	}
 	table.SetColumnSeparator(" ")
 	table.Render()
-	// var domains, _ = redis.Strings(c.Do("KEYS", "*"))
-	// fmt.Println("|--------------------------------------------")
-	// fmt.Printf("| %-20s        %-20s        %-20s\n", "Domain", "IP", "PORT")
-	// fmt.Println("|--------------------------------------------")
-	// for _, domain := range domains {
-
-	// ips, _ := redis.Strings(c.Do("LRANGE", domain, 0, -1))
-	// for _, ip := range ips {
-
-	// fmt.Printf("| %-20s   --   %-20s   --   %-20s\n", domain, ip, "")
-	// }
-
-	// }
-	// fmt.Println("|--------------------------------------------")
 }
 
 func Help() {
@@ -470,7 +456,7 @@ func main() {
 		}
 	} else if argc == 4 {
 		if argv[1] == "add" {
-			// add(docker, c, <container name>, <url>, "")
+			// add(docker, c, <container name/ip>, <url>, 80)
 			Add(docker, c, argv[2], argv[3], 80)
 			Show(c)
 		} else if argv[1] == "rm" {
@@ -486,7 +472,7 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
-			// add(docker, c, <container name>, <url>, <private port>)
+			// add(docker, c, <container name/ip>, <url>, <private port>)
 			Add(docker, c, argv[2], argv[3], port)
 			Show(c)
 		} else if argv[1] == "rm" {
