@@ -64,7 +64,7 @@ Now you can access Hic from any path.
 
 ### License
 
-Wiretip is licensed under the MIT license. (http://opensource.org/licenses/MIT)
+Hic is licensed under the MIT license. (http://opensource.org/licenses/MIT)
 
 
 ### Contributing
