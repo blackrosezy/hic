@@ -1,4 +1,4 @@
-Hic [![Build Status](https://travis-ci.org/blackrosezy/hic.svg?branch=master)](https://travis-ci.org/blackrosezy/hic)
+Hic
 ===========
 
 Hic is a cli program written in Go to add and remove url in Hipache. The motivation why I wrote this program because the lack of cli program to add/remove url in Hipache.
