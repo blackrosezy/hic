@@ -6,7 +6,7 @@ Hic is a cli program written in Go to add and remove url in Hipache.
 
 ### Usage:
 
-```bash
+```
 Hic (Hipache cli) ver. 2.0
 
    Usage:
