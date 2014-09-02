@@ -1,89 +1,65 @@
-Wiretip
+Hic
 ===========
 
-Wiretip (hic) is a cli program written in Go to add and remove url in Hipache.
+Hic is a cli program written in Go to add and remove url in Hipache.
 
 
-### Basic Usage:
+### Usage:
 
-Show help file
 ```bash
-hic
-```
+Hic (Hipache cli) ver. 2.0
 
-List all mappings
-```bash
-hic show
-```
+   Usage:
 
-Add a url mapping
-```bash
-hic add http://mywebsite.com 192.168.1.1:3475
-```
+   = List
+   ==============================
+   List all mappings.
+         hic
 
-Remove 192.168.1.1:3475 from mywebsite.com
-```bash
-hic remove http://mywebsite.com 192.168.1.1:3475
-```
+   + Add
+   ==============================
+   No need to insert http or https for url...
+   ..., the protocol is detected by port number. If port...
+   ... number not given, default is 80.
 
-Remove mywebsite.com
-```bash
-hic remove http://mywebsite.com
-```
+   Add a mapping by container name
+         hic add <container name> <url> <private port>
+    e.g. hic add blog_web_1 mywebsite.com 80
 
+   Add a mapping by ip
+         hic add <ip> <url> <private port>
+    e.g. hic add 192.168.1.6 mywebsite.com 80
 
-### Prerequisite
+   - Remove
+   ==============================
+   Remove url(s).
+         hic rm <url>
+    e.g. hic rm mywebsite.com
 
-You need to install Go to compile this program. You may skip this section if you have working Go installed in your machine. E.g in Ubuntu :
-```bash
-apt-get install golang
-```
-Create directory for Go source codes and binaries:
-```bash
-mkdir -p ~/.gocode
-```
-set GOPATH environment:
-```bash
-vi ~/.bashrc
-```
-...and add this export command to the bottom of the file:
-```bash
-export GOPATH=~/.gocode
-```
-Reload .bashrc
-```bash
-. ~/.bashrc
-```
+   Remove url(s) by ip. This will result...
+   ...removing all ports numbers (80, 443, etc.).
+         hic rm <url> <ip>
+    e.g. hic rm mywebsite.com 192.168.1.6
 
+   Remove an url mapping by container name and port.
+         hic rm <url> <ip> <private port>
+    e.g. hic rm mywebsite.com 192.168.1.6 80
 
-### Compile
+   <> Synchronization
+   ==============================
+   Sync all Ips between containers and Redis in Haraka.
+         hic sync
 
-To compile Wiretip, you need to download dependency library first:
-```bash
-go get github.com/garyburd/redigo/redis
 ```
-Once you finish download, you can checkout Wiretip source code and compile:
-```bash
-git clone git@github.com:blackrosezy/wiretip.git
-cd wiretip
-go build hic.go
-chmod +x hic
-```
-
-You can test by typing:
-```bash
-./hic
-```
-If you can see a help instruction, then your build is success.
-
 
 ### Install
 
-Copy the Wiretip to /usr/local/bin
+Copy the Hic binary to /usr/local/bin
 ```bash
 cp hic /usr/local/bin
+chmod +x /usr/local/bin/hic
 ```
-Now you can access Wiretip from any path.
+Now you can access Hic from any path.
 
 
 ### License
