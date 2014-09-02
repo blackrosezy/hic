@@ -3,6 +3,22 @@ Hic
 
 Hic is a cli program written in Go to add and remove url in Hipache.
 
+```
++-------------------------+--------------------------------------+------+
+            URL                              IP                    PORT
++-------------------------+--------------------------------------+------+
+  morzsoftware.com          IDENTIFIER(_morzsoftware.com)          -
+  morzsoftware.com          192.168.1.4                            80
+  morzsoftware.com          192.168.1.4                            443
+  morzproject.com           IDENTIFIER(_morzproject.com)           -
+  morzproject.com           192.168.1.5                            80
+  morzproject.com           192.168.1.5                            443
+  test.morzproject.com      IDENTIFIER(_test.morzproject.com)      -
+  test.morzproject.com      172.17.0.74                            3186
+  billing.morzproject.com   IDENTIFIER(_billing.morzproject.com)   -
+  billing.morzproject.com   172.17.0.74                            5000
++-------------------------+--------------------------------------+------+
+```
 
 ### Usage:
 
