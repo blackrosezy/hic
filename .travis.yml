@@ -6,3 +6,10 @@ go:
   - 1.2
   - 1.3
   - tip
+
+services:
+  - redis-server
+
+install:
+  - go get -u github.com/blackrosezy/hic
+  - go build hic.go
