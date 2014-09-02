@@ -54,13 +54,13 @@ Hic (Hipache cli) ver. 2.0
 
 ### Install
 
-Compile source code:
+First, download and compile Hic source code:
 ```bash
 go get -u github.com/blackrosezy/hic
 go build github.com/blackrosezy/hic
 ```
 
-Copy the Hic binary to /usr/local/bin
+Then, copy the Hic binary to /usr/local/bin
 ```bash
 cp hic /usr/local/bin
 chmod +x /usr/local/bin/hic
