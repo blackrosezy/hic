@@ -1,16 +1,16 @@
 package main
 
 import (
-	"os"
-	"log"
-	"fmt"
-	"errors"
-	"strconv"
-	"strings"
 	"encoding/json"
-	"github.com/samalba/dockerclient"
+	"errors"
+	"fmt"
 	"github.com/garyburd/redigo/redis"
 	"github.com/olekukonko/tablewriter"
+	"github.com/samalba/dockerclient"
+	"log"
+	"os"
+	"strconv"
+	"strings"
 )
 
 var (
@@ -340,20 +340,20 @@ func Show(c redis.Conn) {
 	rows := [][]string{}
 	for _, item := range data {
 		i := []string{}
-		i = append(i,item.url)
-		
+		i = append(i, item.url)
+
 		if item.ip != "" {
-			i = append(i,item.ip)
-		}else{
-			i = append(i,"IDENTIFIER(" + item.value + ")")
+			i = append(i, item.ip)
+		} else {
+			i = append(i, "IDENTIFIER("+item.value+")")
 		}
 
 		if item.port != 0 {
-			i = append(i,strconv.Itoa(item.port))
-		}else{
+			i = append(i, strconv.Itoa(item.port))
+		} else {
 			i = append(i, "-")
 		}
-		
+
 		rows = append(rows, i)
 	}
 
@@ -372,11 +372,11 @@ func Show(c redis.Conn) {
 	// fmt.Println("|--------------------------------------------")
 	// for _, domain := range domains {
 
-		// ips, _ := redis.Strings(c.Do("LRANGE", domain, 0, -1))
-		// for _, ip := range ips {
+	// ips, _ := redis.Strings(c.Do("LRANGE", domain, 0, -1))
+	// for _, ip := range ips {
 
-			// fmt.Printf("| %-20s   --   %-20s   --   %-20s\n", domain, ip, "")
-		// }
+	// fmt.Printf("| %-20s   --   %-20s   --   %-20s\n", domain, ip, "")
+	// }
 
 	// }
 	// fmt.Println("|--------------------------------------------")
@@ -396,11 +396,11 @@ func Help() {
 	fmt.Println("   No need to insert http or https for url...")
 	fmt.Println("   ..., the protocol is detected by port number. If port...")
 	fmt.Println("   ... number not given, default is 80.\n")
-	
+
 	fmt.Println("   Add a mapping by container name")
 	fmt.Println("         hic add <container name> <url> <private port>")
 	fmt.Println("    e.g. hic add blog_web_1 mywebsite.com 80\n")
-	
+
 	fmt.Println("   Add a mapping by ip")
 	fmt.Println("         hic add <ip> <url> <private port>")
 	fmt.Println("    e.g. hic add 192.168.1.6 mywebsite.com 80\n")
@@ -429,10 +429,6 @@ func Sync(c redis.Conn) {
 
 }
 func main() {
-	mapD := map[string]int{"apple": 5, "lettuce": 7}
-	mapB, _ := json.Marshal(mapD)
-	fmt.Println(string(mapB))
-
 	docker, err := dockerclient.NewDockerClient("unix:///var/run/docker.sock", nil)
 	if err != nil {
 		log.Fatal("Cannot connect to Docker API.")
@@ -461,7 +457,7 @@ func main() {
 		} else if argv[1] == "clear" {
 			Clear(c)
 			Show(c)
-		} else { 
+		} else {
 			Help()
 		}
 	} else if argc == 3 {
