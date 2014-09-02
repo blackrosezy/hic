@@ -54,11 +54,18 @@ Hic (Hipache cli) ver. 2.0
 
 ### Install
 
+Compile source code:
+```bash
+go get -u github.com/blackrosezy/hic
+go build github.com/blackrosezy/hic
+```
+
 Copy the Hic binary to /usr/local/bin
 ```bash
 cp hic /usr/local/bin
 chmod +x /usr/local/bin/hic
 ```
+
 Now you can access Hic from any path.
 
 
