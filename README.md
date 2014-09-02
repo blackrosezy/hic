@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/blackrosezy/hic.svg?branch=master)](https://travis-ci.org/blackrosezy/hic)
 Hic
 ===========
 
