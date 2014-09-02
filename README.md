@@ -1,7 +1,7 @@
 Hic
 ===========
 
-Hic is a cli program written in Go to add and remove url in Hipache.
+Hic is a cli program written in Go to add and remove url in Hipache. The motivation why I wrote this program because the lack of cli program to add/remove url in Hipache.
 
 ```
 +-------------------------+--------------------------------------+------+
