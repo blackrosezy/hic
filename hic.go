@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
@@ -422,7 +421,8 @@ func main() {
 
 	hipache_ip, err := getContainerIpByPort(docker, 6379)
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Cannot detect any Hipache container. Set to default ip - 127.0.0.1")
+		hipache_ip = "127.0.0.1"
 	}
 
 	// Yeah, let's connect to Hipache server!
