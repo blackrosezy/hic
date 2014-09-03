@@ -6,6 +6,8 @@ import (
 	"github.com/garyburd/redigo/redis"
 	"github.com/olekukonko/tablewriter"
 	"github.com/samalba/dockerclient"
+	"gopkg.in/yaml.v1"
+	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
@@ -13,7 +15,7 @@ import (
 )
 
 var (
-	CONFIG_FILENAME = ".hic"
+	CONFIG_FILENAME = ".hic.yml"
 )
 
 var (
@@ -22,18 +24,157 @@ var (
 	IpNotFound        = errors.New("Cannot find Ip.")
 )
 
-type MappingType struct {
-	url  string
-	name string
-	port int
-}
-
 type RedisType struct {
 	url   string
 	ip    string
 	port  int
 	key   string
 	value string
+}
+
+func RemoveDuplicates(a []int) []int {
+	result := []int{}
+	seen := map[int]int{}
+	for _, val := range a {
+		if _, ok := seen[val]; !ok {
+			result = append(result, val)
+			seen[val] = val
+		}
+	}
+	return result
+}
+
+func ReadConfig() (map[interface{}]interface{}, error) {
+	m := make(map[interface{}]interface{})
+	file, err := os.Stat(CONFIG_FILENAME)
+	if err != nil {
+		return m, nil
+	}
+
+	if file.IsDir() {
+		return m, nil
+	}
+
+	file2, err := ioutil.ReadFile(CONFIG_FILENAME)
+	if err != nil {
+		return m, err
+	}
+	data := string(file2)
+
+	err = yaml.Unmarshal([]byte(data), &m)
+	if err != nil {
+		return m, err
+	}
+
+	return m, nil
+}
+
+func AddConfig(config map[interface{}]interface{}, url string, container_name string, port int) map[interface{}]interface{} {
+	m_url := config
+	m_container := make(map[interface{}]interface{})
+	var a_port []int
+
+	match_url, found_match_url := config[url]
+	if !found_match_url {
+		a_port = append(a_port, port)
+		a_port = RemoveDuplicates(a_port)
+		m_container[container_name] = a_port
+		m_url[url] = m_container
+
+		return m_url
+	}
+
+	match_container, found_match_container := match_url.(map[interface{}]interface{})[container_name]
+	if !found_match_container {
+		a_port = append(a_port, port)
+		a_port = RemoveDuplicates(a_port)
+		m_url[url].(map[interface{}]interface{})[container_name] = a_port
+
+		return m_url
+	}
+
+	for _, p := range match_container.([]interface{}) {
+		a_port = append(a_port, p.(int))
+	}
+	a_port = append(a_port, port)
+	a_port = RemoveDuplicates(a_port)
+	m_url[url].(map[interface{}]interface{})[container_name] = a_port
+
+	return m_url
+}
+
+func RemoveConfig(config map[interface{}]interface{}, url string, container_name string, port int) map[interface{}]interface{} {
+	m_url := config
+	if url != "" && container_name != "" && port != 0 {
+
+		match_url, found_match_url := config[url]
+		if !found_match_url {
+			log.Println("Skipped. Cannot find matching url.")
+			return m_url
+		}
+
+		match_container, found_match_container := match_url.(map[interface{}]interface{})[container_name]
+		if !found_match_container {
+			log.Println("Skipped. Cannot find matching container/ip.")
+			return m_url
+		}
+
+		var a_port []int
+		m_container_range := match_container.([]interface{})
+		for _, p := range m_container_range {
+			if p.(int) == port {
+				continue
+			}
+			a_port = append(a_port, p.(int))
+		}
+		m_url[url].(map[interface{}]interface{})[container_name] = a_port
+
+		return m_url
+	} else if url != "" && container_name != "" && port == 0 {
+		match_url, found_match_url := config[url]
+		if !found_match_url {
+			log.Println("Skipped. Cannot find matching url.")
+			return m_url
+		}
+
+		match_container := match_url.(map[interface{}]interface{})
+
+		delete(match_container, container_name)
+
+		return m_url
+	} else if url != "" && container_name == "" && port == 0 {
+
+		delete(config, url)
+
+		return m_url
+	}
+	return m_url
+}
+
+func SaveConfig(url string, container_name string, port int, operation string) error {
+
+	m, err := ReadConfig()
+	if err != nil {
+		return err
+	}
+
+	if operation == "add" {
+		m = AddConfig(m, url, container_name, port)
+	} else if operation == "remove" {
+		m = RemoveConfig(m, url, container_name, port)
+	}
+
+	data, err := yaml.Marshal(&m)
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(CONFIG_FILENAME, data, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func getContainerIpByName(docker *dockerclient.DockerClient, container_name string) (string, error) {
@@ -301,7 +442,12 @@ func Remove(docker *dockerclient.DockerClient, c redis.Conn, url string, ip stri
 		_Remove(c, query, 3)
 	}
 
-	fmt.Println(" => Removed!")
+	err := SaveConfig(query.url, query.ip, query.port, "remove")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(" => Removing item(s) successful!")
 }
 
 // c, <container name/ip>, <url>, <private port>
@@ -327,7 +473,12 @@ func Add(docker *dockerclient.DockerClient, c redis.Conn, container_name string,
 
 	_Add(c, query)
 
-	fmt.Println(" => Added!")
+	err = SaveConfig(query.url, query.ip, query.port, "add")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(" => Adding item(s) successful!")
 }
 
 func Show(c redis.Conn) {
@@ -401,16 +552,62 @@ func Help() {
 	fmt.Println("         hic rm <url> <ip>")
 	fmt.Println("    e.g. hic rm mywebsite.com 192.168.1.6\n")
 
-	fmt.Println("   Remove an url mapping by container name and port.")
+	fmt.Println("   Remove url(s) mapping by container name and port.")
 	fmt.Println("         hic rm <url> <ip> <private port>")
 	fmt.Println("    e.g. hic rm mywebsite.com 192.168.1.6 80\n")
 
 	fmt.Println("   <> Synchronization")
 	fmt.Println("   ==============================")
-	fmt.Println("   Sync all Ips between containers and Redis in Haraka.")
+	fmt.Println("   Sync all IPs between Docker containers and Redis server.")
 	fmt.Println("         hic sync\n")
 }
-func Sync(c redis.Conn) {
+
+func Sync(docker *dockerclient.DockerClient, c redis.Conn) {
+	m, err := ReadConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var redis_obj []RedisType
+
+	for m_url, _ := range m {
+		m_url_range := m[m_url].(map[interface{}]interface{})
+		for m_container, _ := range m_url_range {
+
+			ip, err := getContainerIpByName(docker, m_container.(string))
+			if err != nil {
+				//ip = m_container.(string)
+				//log.Println(" => Cannot find container '"+m_container.(string)+"'. Using hardcoded value '" + ip  + "' as IP.")
+				log.Println(" => Cannot find container '" + m_container.(string) + "'.")
+				continue
+			}
+
+			m_container_range := m_url_range[m_container].([]interface{})
+			for _, p := range m_container_range {
+
+				var obj RedisType
+				obj.port = p.(int)
+				obj.ip = ip
+				obj.url = m_url.(string)
+
+				redis_obj = append(redis_obj, obj)
+
+			}
+		}
+	}
+
+	if len(redis_obj) == 0 {
+		log.Println("\nSkipped. Nothing to sync.")
+		return
+	}
+
+	Clear(c)
+
+	for _, query := range redis_obj {
+		_Add(c, query)
+	}
+
+	log.Println("\nSync successful!")
 
 }
 func main() {
@@ -438,7 +635,7 @@ func main() {
 		Show(c)
 	} else if argc == 2 {
 		if argv[1] == "sync" {
-			Sync(c)
+			Sync(docker, c)
 			Show(c)
 		} else if argv[1] == "clear" {
 			Clear(c)
