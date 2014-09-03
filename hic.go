@@ -9,19 +9,19 @@ import (
 	"gopkg.in/yaml.v1"
 	"io/ioutil"
 	"log"
+	"net"
 	"os"
+	"path"
+	"runtime"
 	"strconv"
 	"strings"
-)
-
-var (
-	CONFIG_FILENAME = ".hic.yml"
 )
 
 var (
 	ContainerNotFound = errors.New("Container not found.")
 	PortNotFound      = errors.New("Cannot find port.")
 	IpNotFound        = errors.New("Cannot find Ip.")
+	InvalidIp         = errors.New("Invalid Ip.")
 )
 
 type RedisType struct {
@@ -31,6 +31,21 @@ type RedisType struct {
 	key   string
 	value string
 }
+
+func UserHomeDir() string {
+	if runtime.GOOS == "windows" {
+		home := os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
+		if home == "" {
+			home = os.Getenv("USERPROFILE")
+		}
+		return home
+	}
+	return os.Getenv("HOME")
+}
+
+var (
+	CONFIG_FILENAME = path.Join(UserHomeDir(), ".hic.yml")
+)
 
 func RemoveDuplicates(a []int) []int {
 	result := []int{}
@@ -450,8 +465,8 @@ func Remove(docker *dockerclient.DockerClient, c redis.Conn, url string, ip stri
 	fmt.Println(" => Removing item(s) successful!")
 }
 
-// c, <container name/ip>, <url>, <private port>
-func Add(docker *dockerclient.DockerClient, c redis.Conn, container_name string, url string, port int) {
+// c, <url>, <container name/ip>, <private port>
+func Add(docker *dockerclient.DockerClient, c redis.Conn, url string, container_name string, port int) {
 	new_url := url
 	if strings.HasPrefix(url, "http://") {
 		new_url = strings.Replace(url, "http://", "", -1)
@@ -462,8 +477,14 @@ func Add(docker *dockerclient.DockerClient, c redis.Conn, container_name string,
 	}
 
 	ip, err := getContainerIpByName(docker, container_name)
+
 	if err != nil {
 		ip = container_name // user pass ip value in container_name parameter
+	}
+
+	res := net.ParseIP(ip)
+	if res == nil {
+		log.Fatal(InvalidIp)
 	}
 
 	var query RedisType
@@ -473,7 +494,7 @@ func Add(docker *dockerclient.DockerClient, c redis.Conn, container_name string,
 
 	_Add(c, query)
 
-	err = SaveConfig(query.url, query.ip, query.port, "add")
+	err = SaveConfig(query.url, container_name, query.port, "add")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -653,7 +674,7 @@ func main() {
 		}
 	} else if argc == 4 {
 		if argv[1] == "add" {
-			// add(docker, c, <container name/ip>, <url>, 80)
+			// add(docker, c, <url>, <container name/ip>, 80)
 			Add(docker, c, argv[2], argv[3], 80)
 			Show(c)
 		} else if argv[1] == "rm" {
@@ -669,7 +690,7 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
-			// add(docker, c, <container name/ip>, <url>, <private port>)
+			// add(docker, c, <url>, <container name/ip>, <private port>)
 			Add(docker, c, argv[2], argv[3], port)
 			Show(c)
 		} else if argv[1] == "rm" {
