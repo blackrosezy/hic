@@ -57,13 +57,13 @@ Hic (Hipache cli) ver. 2.0
          hic rm <url> <ip>
     e.g. hic rm mywebsite.com 192.168.1.6
 
-   Remove an url mapping by container name and port.
+   Remove url(s) mapping by container name and port.
          hic rm <url> <ip> <private port>
     e.g. hic rm mywebsite.com 192.168.1.6 80
 
    <> Synchronization
    ==============================
-   Sync all Ips between containers and Redis in Haraka.
+   Sync all IPs between Docker containers and Redis server.
          hic sync
 
 ```
