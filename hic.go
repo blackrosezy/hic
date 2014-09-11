@@ -511,21 +511,13 @@ func Show(c redis.Conn) {
 	rows := [][]string{}
 	for _, item := range data {
 		i := []string{}
-		i = append(i, item.url)
 
 		if item.ip != "" {
+		    i = append(i, item.url)
 			i = append(i, item.ip)
-		} else {
-			i = append(i, "IDENTIFIER("+item.value+")")
-		}
-
-		if item.port != 0 {
 			i = append(i, strconv.Itoa(item.port))
-		} else {
-			i = append(i, "-")
+			rows = append(rows, i)
 		}
-
-		rows = append(rows, i)
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
