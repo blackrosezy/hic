@@ -192,6 +192,24 @@ func SaveConfig(url string, container_name string, port int, operation string) e
 	return nil
 }
 
+func getContainerNameByIp(docker *dockerclient.DockerClient, container_ip string) (string, error) {
+	containers, err := docker.ListContainers(false)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	container_name := ""
+	for _, c := range containers {
+		info, _ := docker.InspectContainer(c.Id)
+		if info.NetworkSettings.IpAddress == container_ip {
+			container_name = info.Name
+			break
+		}
+	}
+
+	return container_name, nil
+}
+
 func getContainerIpByName(docker *dockerclient.DockerClient, container_name string) (string, error) {
 	containers, err := docker.ListContainers(false)
 	if err != nil {
@@ -502,7 +520,7 @@ func Add(docker *dockerclient.DockerClient, c redis.Conn, url string, container_
 	fmt.Println(" => Adding item(s) successful!")
 }
 
-func Show(c redis.Conn) {
+func Show(docker *dockerclient.DockerClient, c redis.Conn) {
 	data, err := getRedisDataAsList(c)
 	if err != nil {
 		log.Fatal(err)
@@ -513,16 +531,22 @@ func Show(c redis.Conn) {
 		i := []string{}
 
 		if item.ip != "" {
-		    i = append(i, item.url)
+			i = append(i, item.url)
 			i = append(i, item.ip)
 			i = append(i, strconv.Itoa(item.port))
+			container_name, err := getContainerNameByIp(docker, item.ip)
+			if err != nil {
+				container_name = "__error__"
+			}
+			i = append(i, strings.TrimPrefix(container_name, "/"))
+
 			rows = append(rows, i)
 		}
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"Url", "Ip", "Port"})
+	table.SetHeader([]string{"Url", "Ip", "Port", "Container Name"})
 
 	for _, v := range rows {
 		table.Append(v)
@@ -645,14 +669,14 @@ func main() {
 	argv := os.Args
 
 	if argc == 1 {
-		Show(c)
+		Show(docker, c)
 	} else if argc == 2 {
 		if argv[1] == "sync" {
 			Sync(docker, c)
-			Show(c)
+			Show(docker, c)
 		} else if argv[1] == "clear" {
 			Clear(c)
-			Show(c)
+			Show(docker, c)
 		} else {
 			Help()
 		}
@@ -660,7 +684,7 @@ func main() {
 		if argv[1] == "rm" {
 			// remove(docker, c, <url>, "", 0)
 			Remove(docker, c, argv[2], "", 0)
-			Show(c)
+			Show(docker, c)
 		} else {
 			Help()
 		}
@@ -668,11 +692,11 @@ func main() {
 		if argv[1] == "add" {
 			// add(docker, c, <url>, <container name/ip>, 80)
 			Add(docker, c, argv[2], argv[3], 80)
-			Show(c)
+			Show(docker, c)
 		} else if argv[1] == "rm" {
 			// remove(docker, c, <url>, <ip>, 0)
 			Remove(docker, c, argv[2], argv[3], 0)
-			Show(c)
+			Show(docker, c)
 		} else {
 			Help()
 		}
@@ -684,7 +708,7 @@ func main() {
 			}
 			// add(docker, c, <url>, <container name/ip>, <private port>)
 			Add(docker, c, argv[2], argv[3], port)
-			Show(c)
+			Show(docker, c)
 		} else if argv[1] == "rm" {
 			port, err := strconv.Atoi(argv[4])
 			if err != nil {
@@ -692,7 +716,7 @@ func main() {
 			}
 			// remove(docker, c, <url>, <ip>, <private port>)
 			Remove(docker, c, argv[2], argv[3], port)
-			Show(c)
+			Show(docker, c)
 		} else {
 			Help()
 		}
