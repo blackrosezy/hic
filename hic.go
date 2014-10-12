@@ -556,7 +556,7 @@ func Show(docker *dockerclient.DockerClient, c redis.Conn) {
 }
 
 func Help() {
-	fmt.Println("Hic (Hipache cli) ver. 2.0\n")
+	fmt.Println("Hic (Hipache cli) ver. 2.1\n")
 	fmt.Println("   Usage:\n")
 
 	fmt.Println("   = List")
@@ -571,12 +571,12 @@ func Help() {
 	fmt.Println("   ... number not given, default is 80.\n")
 
 	fmt.Println("   Add a mapping by container name")
-	fmt.Println("         hic add <container name> <url> <private port>")
-	fmt.Println("    e.g. hic add blog_web_1 mywebsite.com 80\n")
+	fmt.Println("         hic add <url> <container name> <private port>")
+	fmt.Println("    e.g. hic add mywebsite.com blog_web_1 80\n")
 
 	fmt.Println("   Add a mapping by ip")
-	fmt.Println("         hic add <ip> <url> <private port>")
-	fmt.Println("    e.g. hic add 192.168.1.6 mywebsite.com 80\n")
+	fmt.Println("         hic add <url> <ip> <private port>")
+	fmt.Println("    e.g. hic add mywebsite.com 192.168.1.6 80\n")
 
 	fmt.Println("   - Remove")
 	fmt.Println("   ==============================")

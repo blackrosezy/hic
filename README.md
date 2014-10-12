@@ -18,7 +18,7 @@ Hic is a standalone cli program written in Go to add and remove url in Hipache. 
 ### Usage:
 
 ```
-Hic (Hipache cli) ver. 2.0
+Hic (Hipache cli) ver. 2.1
 
    Usage:
 
@@ -34,12 +34,12 @@ Hic (Hipache cli) ver. 2.0
    ... number not given, default is 80.
 
    Add a mapping by container name
-         hic add <container name> <url> <private port>
-    e.g. hic add blog_web_1 mywebsite.com 80
+         hic add <url> <container name> <private port>
+    e.g. hic add mywebsite.com blog_web_1 80
 
    Add a mapping by ip
-         hic add <ip> <url> <private port>
-    e.g. hic add 192.168.1.6 mywebsite.com 80
+         hic add <url> <ip> <private port>
+    e.g. hic add mywebsite.com 192.168.1.6 80
 
    - Remove
    ==============================
@@ -60,7 +60,6 @@ Hic (Hipache cli) ver. 2.0
    ==============================
    Sync all IPs between Docker containers and Redis server.
          hic sync
-
 ```
 
 ### Install
