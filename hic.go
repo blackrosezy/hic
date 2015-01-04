@@ -210,6 +210,40 @@ func getContainerNameByIp(docker *dockerclient.DockerClient, container_ip string
 	return container_name, nil
 }
 
+func getContainerIpByEnv(docker *dockerclient.DockerClient, container_env string) (string, error) {
+	containers, err := docker.ListContainers(false)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	container_id := "0"
+	for _, c := range containers {
+		info, _ := docker.InspectContainer(c.Id)
+		for _, env := range info.Config.Env {
+			if env == "HIPACHE=__INSTANCE__" {
+				container_id = c.Id
+				break
+			}
+		}
+		if container_id != "0" {
+			break
+		}
+	}
+
+	if container_id == "0" {
+		return "", ContainerNotFound
+	}
+
+	info, err := docker.InspectContainer(container_id)
+	if err != nil {
+		return "", err
+	}
+
+	container_ip := info.NetworkSettings.IpAddress
+
+	return container_ip, nil
+}
+
 func getContainerIpByName(docker *dockerclient.DockerClient, container_name string) (string, error) {
 	containers, err := docker.ListContainers(false)
 	if err != nil {
@@ -653,7 +687,7 @@ func main() {
 		log.Fatal("Cannot connect to Docker API.")
 	}
 
-	hipache_ip, err := getContainerIpByPort(docker, 6379)
+	hipache_ip, err := getContainerIpByEnv(docker, "HIPACHE=__INSTANCE__")
 	if err != nil {
 		log.Println("Cannot detect any Hipache container. Set to default ip - 127.0.0.1")
 		hipache_ip = "127.0.0.1"
