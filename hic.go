@@ -193,7 +193,7 @@ func SaveConfig(url string, container_name string, port int, operation string) e
 }
 
 func getContainerNameByIp(docker *dockerclient.DockerClient, container_ip string) (string, error) {
-	containers, err := docker.ListContainers(false)
+	containers, err := docker.ListContainers(true, false, "")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -211,7 +211,7 @@ func getContainerNameByIp(docker *dockerclient.DockerClient, container_ip string
 }
 
 func getContainerIpByEnv(docker *dockerclient.DockerClient, container_env string) (string, error) {
-	containers, err := docker.ListContainers(false)
+	containers, err := docker.ListContainers(true, false, "")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -245,7 +245,7 @@ func getContainerIpByEnv(docker *dockerclient.DockerClient, container_env string
 }
 
 func getContainerIpByName(docker *dockerclient.DockerClient, container_name string) (string, error) {
-	containers, err := docker.ListContainers(false)
+	containers, err := docker.ListContainers(true, false, "")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -279,7 +279,7 @@ func getContainerIpByName(docker *dockerclient.DockerClient, container_name stri
 }
 
 func getContainerIpByPort(docker *dockerclient.DockerClient, container_port int) (string, error) {
-	containers, err := docker.ListContainers(false)
+	containers, err := docker.ListContainers(true, false, "")
 	if err != nil {
 		log.Fatal(err)
 	}
