@@ -1,2 +1,5 @@
-hic
-.hic.yml
+id_rsa
+*.pyc
+*.pyo
+*.zip
+**/.idea/*
