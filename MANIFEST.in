@@ -1,1 +1,1 @@
-include README.rst LICENSE *.py hic
+include README.rst LICENSE hic *.py

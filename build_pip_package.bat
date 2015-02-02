@@ -2,10 +2,10 @@
 
 REM Cleanup build folder
 if exist tmp rd tmp /s /q
-del "hic-*" /q
+del "hipache_cli-*" /q
 
 mkdir tmp
-xcopy *.py tmp /Y
+xcopy hipache_cli\* tmp /Y
 xcopy hic tmp /Y
 xcopy LICENSE tmp /Y
 xcopy MANIFEST.in tmp /Y

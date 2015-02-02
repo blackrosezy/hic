@@ -10,10 +10,10 @@ Usage:
 from docopt import docopt
 from tabulate import tabulate
 
-from rediscli import RedisCli
-from dockercli import DockerCli
-from configuration import Configuration
-from hicparser import Parser
+from hipache_cli.rediscli import RedisCli
+from hipache_cli.dockercli import DockerCli
+from hipache_cli.configuration import Configuration
+from hipache_cli.hicparser import Parser
 
 
 class Hic:

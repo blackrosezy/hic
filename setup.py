@@ -5,7 +5,7 @@ from setuptools import find_packages
 
 
 setup(
-    name='hic',
+    name='hipache_cli',
     version='2.0.0',
     author='Mohd Rozi',
     author_email='blackrosezy@gmail.com',
