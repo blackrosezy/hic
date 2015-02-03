@@ -1,7 +1,7 @@
 import redis
 
-from hipache_cli.hicparser import Parser
-from hipache_cli.dockercli import DockerCli
+from hicparser import Parser
+from dockercli import DockerCli
 
 
 class RedisCli:

@@ -10,10 +10,10 @@ Usage:
 from docopt import docopt
 from tabulate import tabulate
 
-from hipache_cli.rediscli import RedisCli
-from hipache_cli.dockercli import DockerCli
-from hipache_cli.configuration import Configuration
-from hipache_cli.hicparser import Parser
+from rediscli import RedisCli
+from dockercli import DockerCli
+from configuration import Configuration
+from hicparser import Parser
 
 
 class Hic:
@@ -119,7 +119,7 @@ class Hic:
         print tabulate(rows, headers=['URL', 'IP', 'HOST PORT', 'CONT. PORT', 'CONTAINER NAME'])
 
 
-if __name__ == '__main__':
+def main():
     cli = docopt(__doc__, version='Hic 2.0')
     hic = Hic()
     if cli['add']:
@@ -142,3 +142,7 @@ if __name__ == '__main__':
     elif cli['sync']:
         hic.sync()
         hic.show()
+
+
+if __name__ == '__main__':
+    main()

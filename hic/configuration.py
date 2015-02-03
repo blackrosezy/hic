@@ -1,6 +1,6 @@
 import json
 
-from hipache_cli.dockercli import DockerCli
+from dockercli import DockerCli
 
 
 class Configuration:
