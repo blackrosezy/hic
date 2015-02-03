@@ -4,7 +4,7 @@ from dockercli import DockerCli
 
 
 class Configuration:
-    CONFIG_FILE = '/root/.hic.json'
+    CONFIG_FILE = '~/.hic.json'
 
     def __init__(self):
         self.dockercli = DockerCli()

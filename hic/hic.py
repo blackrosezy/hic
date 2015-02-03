@@ -3,7 +3,7 @@
 """Hic
 
 Usage:
-  hic add <url> <container_name> [<port>]
+  hic add <url> <container_name> [<container_port>]
   hic rm <url>
   hic sync
 """
@@ -125,8 +125,8 @@ def main():
     if cli['add']:
         port = 0
         try:
-            if cli['<port>']:
-                port = int(cli['<port>'])
+            if cli['<container_port>']:
+                port = int(cli['<container_port>'])
         except ValueError:
             pass
         if port:
