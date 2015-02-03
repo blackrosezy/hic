@@ -13,14 +13,17 @@ http://b.example.com    172.17.0.b         4567            80  container_B
 ### Usage:
 
 **Add**
+
 Add an url to redis server.
 ```
 hic add <url> <container_name> [<container_port>]
 ```
 e.g: `hic add http://a.example.com container_A`
+
 e.g: `hic add http://a.example.com container_A 8081`
 
 **Remove**
+
 Remove an url from redis server.
 ```
 hic rm <url>
@@ -28,6 +31,7 @@ hic rm <url>
 e.g: `hic rm http://a.example.com`
 
 **Sync**
+
 Sync redis server with configuration file. The default location for configuration file is `~/.hic.json`.
 ```
   hic add sync
