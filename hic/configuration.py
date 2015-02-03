@@ -1,10 +1,12 @@
 import json
+import os
+from os.path import expanduser
 
 from dockercli import DockerCli
 
 
 class Configuration:
-    CONFIG_FILE = '~/.hic.json'
+    CONFIG_FILE = os.path.join(expanduser("~"), '.hic.json')
 
     def __init__(self):
         self.dockercli = DockerCli()
