@@ -20,13 +20,13 @@ class DockerCli:
     def __connect_to_default_socket(self):
         try:
             return Client(base_url='unix:///var/run/docker.sock')
-        except errors.DockerException:
+        except Exception:
             return None
 
     def __connect_to_custom_tcp(self):
         try:
             return Client(base_url='tcp://127.0.0.1:9867')
-        except errors.DockerException:
+        except Exception:
             return None
 
     def __remove_tcp_from_port(self, tcp_port):
