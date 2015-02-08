@@ -27,7 +27,7 @@ class DockerCli:
 
     def __connect_to_custom_tcp(self):
         try:
-            c = Client(base_url='tcp://127.0.0.1:9867')
+            c = Client(base_url='tcp://localhost:2379')
             c.info()
             return c
         except Exception:
