@@ -1,5 +1,7 @@
-from docker import Client, errors
+import ssl
 
+import docker
+from docker import Client, errors
 
 class DockerCli:
     def __init__(self):
@@ -27,10 +29,15 @@ class DockerCli:
 
     def __connect_to_custom_tcp(self):
         try:
-            c = Client(base_url='tcp://localhost:2379')
+            tls_config = docker.tls.TLSConfig(
+              client_cert=('/root/.docker/cert.pem','/root/.docker/key.pem'),
+              verify='/root/.docker/ca.pem',ssl_version=ssl.PROTOCOL_TLSv1
+            )
+            c = Client(base_url='https://localhost:2379', tls=tls_config)
             c.info()
             return c
-        except Exception:
+        except Exception as e:
+            print e
             return None
 
     def __remove_tcp_from_port(self, tcp_port):
