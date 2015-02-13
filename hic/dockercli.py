@@ -1,7 +1,9 @@
 import ssl
+import time
 
 import docker
-from docker import Client, errors
+from docker import Client
+
 
 class DockerCli:
     def __init__(self):
@@ -28,17 +30,24 @@ class DockerCli:
             return None
 
     def __connect_to_custom_tcp(self):
-        try:
-            tls_config = docker.tls.TLSConfig(
-              client_cert=('/root/.docker/cert.pem','/root/.docker/key.pem'),
-              verify='/root/.docker/ca.pem',ssl_version=ssl.PROTOCOL_TLSv1
-            )
-            c = Client(base_url='https://localhost:2379', tls=tls_config)
-            c.info()
-            return c
-        except Exception as e:
-            print e
-            return None
+        num_of_tries = 5
+        current_tries = 0
+        while True:
+            try:
+                tls_config = docker.tls.TLSConfig(
+                    client_cert=('/root/.docker/cert.pem', '/root/.docker/key.pem'),
+                    verify='/root/.docker/ca.pem', ssl_version=ssl.PROTOCOL_TLSv1
+                )
+                c = Client(base_url='https://localhost:2379', tls=tls_config)
+                c.info()
+                return c
+            except Exception as e:
+                if current_tries <= num_of_tries:
+                    time.sleep(0.5)
+                    current_tries += 1
+                else:
+                    print " => Skipping connect to custom tcp."
+                    return None
 
     def __remove_tcp_from_port(self, tcp_port):
         return int(tcp_port.replace('/tcp', ''))
@@ -70,11 +79,10 @@ class DockerCli:
             tmp_containers = docker_conn.containers()
             ok_containers = []
             for tmp_container in tmp_containers:
-                try:
-                    tmp_container['more_info'] = docker_conn.inspect_container(tmp_container)
-                    ok_containers.append(tmp_container)
-                except Exception:
+                if tmp_container['Status'] == 'Pending':
                     continue
+                tmp_container['more_info'] = docker_conn.inspect_container(tmp_container)
+                ok_containers.append(tmp_container)
             containers += ok_containers
         return containers
 

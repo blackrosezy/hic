@@ -7,9 +7,10 @@ Usage:
   hic rm <url>
   hic sync
 """
-from docopt import docopt
-from tabulate import tabulate
 
+from docopt import docopt
+
+from tabulate import tabulate
 from rediscli import RedisCli
 from dockercli import DockerCli
 from configuration import Configuration
