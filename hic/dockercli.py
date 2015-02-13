@@ -68,9 +68,14 @@ class DockerCli:
         containers = []
         for docker_conn in self.docker_conns:
             tmp_containers = docker_conn.containers()
+            ok_containers = []
             for tmp_container in tmp_containers:
-                tmp_container['more_info'] = docker_conn.inspect_container(tmp_container)
-            containers += tmp_containers
+                try:
+                    tmp_container['more_info'] = docker_conn.inspect_container(tmp_container)
+                    ok_containers.append(tmp_container)
+                except Exception:
+                    continue
+            containers += ok_containers
         return containers
 
     def list_containers_filtered(self):
