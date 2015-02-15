@@ -20,9 +20,9 @@ from hicparser import Parser
 class Hic:
     def __init__(self):
         self.dockercli = DockerCli()
-        self.rediscli = RedisCli()
+        self.rediscli = RedisCli(self.dockercli)
         self.parser = Parser()
-        self.config = Configuration()
+        self.config = Configuration(self.dockercli)
 
     def add_command(self, url, container_name, port=80):
         err, protocol, domain = self.parser.split_url(url)

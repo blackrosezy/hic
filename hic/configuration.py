@@ -2,14 +2,12 @@ import json
 import os
 from os.path import expanduser
 
-from dockercli import DockerCli
-
 
 class Configuration:
     CONFIG_FILE = os.path.join(expanduser("~"), '.hic.json')
 
-    def __init__(self):
-        self.dockercli = DockerCli()
+    def __init__(self, dockercli):
+        self.dockercli = dockercli
 
     def read_config(self):
         try:

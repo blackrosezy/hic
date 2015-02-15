@@ -1,12 +1,11 @@
 import redis
 
 from hicparser import Parser
-from dockercli import DockerCli
 
 
 class RedisCli:
-    def __init__(self):
-        self.dockercli = DockerCli()
+    def __init__(self, dockercli):
+        self.dockercli = dockercli
         self.__connect_to_redis()
 
     def __connect_to_redis(self):
