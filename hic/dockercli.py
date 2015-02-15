@@ -30,7 +30,7 @@ class DockerCli:
             return None
 
     def __connect_to_custom_tcp(self):
-        num_of_tries = 5
+        num_of_tries = 1
         current_tries = 0
         while True:
             try:
