@@ -59,15 +59,14 @@ class DockerCli:
         exit(1)
 
     def get_ip_and_host_port(self, container, port):
-        container_ip = ''
+        container_ip = container['ip']
         host_port = 0
-        if container['node_ip']:
-            container_ip = container['node_ip']
+        if container['found_node']:
             tcp_port = container['ports'].get('%d/tcp' % port, '')
             if tcp_port:
+                container_ip = tcp_port[0]['HostIp']
                 host_port = int(tcp_port[0].get('HostPort', 0))
         else:
-            container_ip = container['ip']
             tcp_port = container['ports'].get('%d/tcp' % port, '__NOT_FOUND__')
             if tcp_port != '__NOT_FOUND__':
                 host_port = port
@@ -92,9 +91,9 @@ class DockerCli:
             info = container['more_info']
             item = {}
             if info.get('Node', '') != '':
-                item['node_ip'] = info['Node']['IP']
+                item['found_node'] = True
             else:
-                item['node_ip'] = ''
+                item['found_node'] = False
             item['name'] = container['Names'][0][1:]
             item['ip'] = info['NetworkSettings']['IPAddress']
             item['ports'] = info['NetworkSettings']['Ports']
